@@ -13,18 +13,46 @@ SoundPool soundPool;
 HashMap<Object, Object> soundPoolMap;
 Activity act;
 Context cont;
+AssetFileDescriptor afd1;
+int s1;
+int streamId;
 
 int gamestate;
 PImage[] logo;
 
 SoundFile file;
 
+void playSound(int soundID)
+{
+  // play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate)
+ 
+  soundPool.stop(streamId); // kill previous sound - quick hack to void mousePressed triggering twice
+  streamId = soundPool.play(soundID, 1.0, 1.0, 1, 0, 1f);
+}
+
+
 void setup()
 {
   size(500,1000);
   //animation
   logo = new PImage[5];
-file = new SoundFile(this, "logo thunder.mp3");
+
+
+  act = this.getActivity();
+  cont = act.getApplicationContext();
+ 
+  // load up the files
+  try {
+    afd1 = cont.getAssets().openFd("logo thunder.mp3");
+   
+  } 
+  catch(IOException e) {
+    println("error loading files:" + e);
+  }
+  // create the soundPool HashMap - apparently this constructor is now depracated?
+  soundPool = new SoundPool(12, AudioManager.STREAM_MUSIC, 0);
+  soundPoolMap = new HashMap<Object, Object>(2);
+  soundPoolMap.put(s1, soundPool.load(afd1, 1));
  
   //lighter one
   for (int i = 0; i < logo.length; i++) {
@@ -52,7 +80,7 @@ void createLogo()
 
     if (frameCount>=122)
     {
-         file.play();
+        streamId =  soundPool.play(1,1.0,1.0 ,1, 0,1f);
       image(logo[1], 0, 0, width, height);
     }
     if (frameCount>=126)
@@ -61,7 +89,7 @@ void createLogo()
       image(logo[2], 0, 0, width, height);
       image(logo[0], width * .14285714, height * .001, widthL, .7 *widthL );
       image(logo[4], width*.1428571429, height*.4, width*.7142857143, width*.7142857143);
-       file.stop();
+      soundPool.stop(streamId);
     }
     if (frameCount>=170)
     {
