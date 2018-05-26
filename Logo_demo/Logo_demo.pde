@@ -33,7 +33,7 @@ void playSound(int soundID)
 
 void setup()
 {
-  size(500,1000);
+  fullScreen();
   //animation
   logo = new PImage[5];
 
@@ -69,6 +69,11 @@ void draw()
   background(0);
   text("Hello" , width/2,height/2);
  }
+ if(mousePressed)
+ {
+   gamestate = 1000;
+ }
+   
 }
 void createLogo()
 {
@@ -102,9 +107,13 @@ void createLogo()
     float widthL = width * .5;
     image(logo[0], width * .25, height * .001, widthL, .7 *widthL );
 
+if(frameCount>=121)
+{
+  streamId =  soundPool.play(1,1.0,1.0 ,1, 0,1f); 
+}
     if (frameCount>=122)
     {
-       file.play();
+      
       image(logo[1], 0, 0, width, height);
     }
     if (frameCount>=126)
@@ -114,8 +123,8 @@ void createLogo()
       //words
       image(logo[0], width * .25, height * .001, widthL, .7 *widthL );
       //logos
-      image(logo[4], (width*.25) + (widthL/2) - (height*.225), height*.45, height*.45, height*.45);
-            file.stop();
+      image(logo[4], (width*.25) + (widthL/2) - (height*.225), height*.5, height*.45, height*.45);
+          soundPool.stop(streamId);
     }
     if (frameCount>=170)
     {
